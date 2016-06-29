@@ -26,6 +26,9 @@ object GUI extends JFXApp {
       }
     }
   */
+  val characters = ObservableBuffer[Order]()
+  var OrderList1 = new OrderList
+
   onShowLoginDialog
   def onShowLoginDialog(): Unit = {
 
@@ -103,28 +106,25 @@ object GUI extends JFXApp {
       }
     }
 
-
   }
-/*new
+/*
     def PrintOrderList(): Unit = {
-
-      val characters = ObservableBuffer[main1.OrderListOfficial](
-
-      )
 
       stage = new PrimaryStage {
         title = "Order Table"
-        scene = new Scene{
-          content = new TableView[Order](characters){
+        scene = new Scene {
+          content = new TableView[Order](characters) {
             columns ++= List(
-              new TableColumn(characters[])) {
+              new TableColumn[Order, String] {
                 text = "Item"
-                cellValueFactory = {main1.OrderListOfficial.item}
+                cellValueFactory = {_.value.item}
                 prefWidth = 100
               },
-              }
+              prefWidth = 100
+
             )
           }
-          */
-
+        }
+      }
+*/
 }
