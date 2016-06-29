@@ -105,11 +105,10 @@ object GUI extends JFXApp {
 
 
   }
-  /*
+/*new
     def PrintOrderList(): Unit = {
 
-      val characters = ObservableBuffer[Order](
-        main1.OrderList1
+      val characters = ObservableBuffer[main1.OrderListOfficial](
 
       )
 
@@ -118,7 +117,7 @@ object GUI extends JFXApp {
         scene = new Scene{
           content = new TableView[Order](characters){
             columns ++= List(
-              new TableColumn[String] {
+              new TableColumn(characters[])) {
                 text = "Item"
                 cellValueFactory = {main1.OrderListOfficial.item}
                 prefWidth = 100
@@ -126,5 +125,6 @@ object GUI extends JFXApp {
               }
             )
           }
-        }*/
+          */
+
 }
