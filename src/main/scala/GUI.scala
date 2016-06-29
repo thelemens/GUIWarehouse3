@@ -1,26 +1,31 @@
+import scala.collection.mutable.ArrayBuffer
 import scalafx.Includes._
+import scalafx.application.JFXApp.PrimaryStage
 import scalafx.application.{JFXApp, Platform}
+import scalafx.collections.ObservableBuffer
 import scalafx.geometry.Insets
+import scalafx.scene.Scene
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.ButtonBar.ButtonData
 import scalafx.scene.control._
 import scalafx.scene.layout.GridPane
+import scalafx.scene.paint.Color
 
 object GUI extends JFXApp {
-/*
-  stage = new JFXApp.PrimaryStage {
-    //icons += new Image("/scalafx/sfx.png")
-    scene = new Scene {
-      title = "login"
-      content = new VBox {
-        children = new Button("Press to continue") {
-          onAction = handle {onShowLoginDialog()}
+  /*
+    stage = new JFXApp.PrimaryStage {
+      //icons += new Image("/scalafx/sfx.png")
+      scene = new Scene {
+        title = "login"
+        content = new VBox {
+          children = new Button("Press to continue") {
+            onAction = handle {onShowLoginDialog()}
+          }
+          padding = Insets(top = 24, right = 64, bottom = 24, left = 64)
         }
-        padding = Insets(top = 24, right = 64, bottom = 24, left = 64)
       }
     }
-  }
-*/
+  */
   onShowLoginDialog
   def onShowLoginDialog(): Unit = {
 
@@ -31,7 +36,7 @@ object GUI extends JFXApp {
       initOwner(stage)
       title = "Login"
       headerText = "Please login"
-     // graphic = new ImageView(this.getClass.getResource("login_icon.png").toString)
+      // graphic = new ImageView(this.getClass.getResource("login_icon.png").toString)
     }
 
     // Set the button types.
@@ -97,6 +102,29 @@ object GUI extends JFXApp {
         }
       }
     }
-  }
 
+
+  }
+  /*
+    def PrintOrderList(): Unit = {
+
+      val characters = ObservableBuffer[Order](
+        main1.OrderList1
+
+      )
+
+      stage = new PrimaryStage {
+        title = "Order Table"
+        scene = new Scene{
+          content = new TableView[Order](characters){
+            columns ++= List(
+              new TableColumn[String] {
+                text = "Item"
+                cellValueFactory = {main1.OrderListOfficial.item}
+                prefWidth = 100
+              },
+              }
+            )
+          }
+        }*/
 }
