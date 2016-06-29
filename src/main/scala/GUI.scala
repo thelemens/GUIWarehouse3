@@ -121,10 +121,9 @@ object GUI extends JFXApp {
                 prefWidth = 100
               },
               prefWidth = 100
-
             )
           }
         }
-      }
-*/
+      }*/
+
 }
