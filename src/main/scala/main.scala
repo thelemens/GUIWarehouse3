@@ -18,7 +18,7 @@ object main1 {
   var StockListOfficial = Stock.getInventoryList
   var OrderListOfficial = OrderList1.getOrderList
 
-  OrderListOfficial
+  //OrderListOfficial
   var valid = false
   var continue = false
 
@@ -29,7 +29,7 @@ object main1 {
 
 
 
-    while (valid == false) {
+    while (!valid) {
       continue = false
       var input = ""
       var option = ""
@@ -51,7 +51,7 @@ object main1 {
 
       accountType = accountTypeCheck()
 
-      if (continue == true) {
+      if (continue) {
         if (accountType == "admin") {
           println()
           println("Admin session activated")
@@ -75,18 +75,21 @@ object main1 {
     var finished = false
     var option = 0
 
-    while (finished == false) {
+    while (!finished) {
       println("Pick an option : ")
       println()
       println("Press 1 : Check order list")
       println("Press 2 : Choose/pick order")
+      println("Press 3 : View orders with order items")
       println("Press 4 : To quit")
-      var option = scala.io.StdIn.readLine()
+      val option = scala.io.StdIn.readLine()
 
-      (option) match {
+      option match {
         case "1" => println("Checking Orders...")
           printOrders()
         case "2" => chooseOrder()
+
+        case "3" => OrderList1.viewOrderItems(Stock)
         case "4" => finished = true
 
         case _ => println("invalid option")
@@ -99,7 +102,7 @@ object main1 {
 
     var ConsoleInput: Int = 0
     var checked = false
-    while (checked == false) {
+    while (!checked) {
       println("Order allocation")
       println()
       printOrders()
@@ -107,7 +110,7 @@ object main1 {
       print("Enter order number you wish to choose : ")
       ConsoleInput = scala.io.StdIn.readInt()
 
-      if (OrderListOfficial(ConsoleInput - 1).status != "Allocated") {
+      if (OrderListOfficial(ConsoleInput - 1).status != OrderStatus.Allocated) {
         checked = true
       } else {
         println("Order has already been allocated!!! choose another order")
@@ -126,7 +129,7 @@ object main1 {
     var finished = false
 
 
-    while (finished == false) {
+    while (!finished) {
       println("Pick an option : ")
       println()
       println("Press 1 : Check order list")
@@ -135,7 +138,7 @@ object main1 {
       println("Press 4 : To quit")
       val option = scala.io.StdIn.readLine()
 
-      (option) match {
+      option match {
         case "1" => println("Checking stock...")
           printOrders()
         case "2" => OrderManager() //finish
@@ -154,7 +157,7 @@ object main1 {
     var selection = ""
     var finished = false
 
-    while (finished == false) {
+    while (!finished) {
       println("Stock manager")
       println()
       printOrders()
@@ -166,7 +169,7 @@ object main1 {
 
       // = ArrayBuffer(OrderList1.getOrderList)
 
-      selection = OrderList1.printListIndividual(ConsoleInput)
+      selection = OrderList1.printListIndividual(ConsoleInput, Stock)
       println("You have selected : " + selection)
       println("What do you want to do with this order? : ")
       println
@@ -176,9 +179,9 @@ object main1 {
       println("Press 4 : To quit")
       print(": ")
 
-      var option = scala.io.StdIn.readLine()
+      val option = scala.io.StdIn.readLine()
 
-      (option) match {
+      option match {
         case "1" => shipped(ConsoleInput) //SHOULD CHECK IF IT HAS BEEN ALLOCATED FIRST
         case "2" => addOrder()
         case "3" => delivered(ConsoleInput) //SHOULD CHECK IF IT HAS BEEN SHIPPED FIRST
@@ -192,16 +195,15 @@ object main1 {
     def addOrder(): Unit = {
 
 
-      val defaultStatus = "InStock"
       val newID = OrderListOfficial.last.id + 1
       print("Select item : ")
       var newItem = scala.io.StdIn.readLine() //check item exists
       print("Select Quantity : ")
-      var quantity: Int = scala.io.StdIn.readInt() //check item in stock
+      val quantity: Int = scala.io.StdIn.readInt() //check item in stock
       print("Order name : ")
       val newObject: String = scala.io.StdIn.readLine()
 
-      OrderList1.addOrder(newID, newItem, quantity, defaultStatus, newObject)
+      OrderList1.addOrder(newID, quantity, OrderStatus.Ordered, newObject, ArrayBuffer())
       updateOrderList()
 
     }
@@ -214,7 +216,7 @@ object main1 {
 
     def delivered(ItemID: Int): Unit = {
 
-      OrderList1.markeddelivered(ItemID)
+      OrderList1.markedDelivered(ItemID)
       updateOrderList()
     }
 
@@ -231,14 +233,16 @@ object main1 {
   def checkworker(inputUser: String, inputPass: String): String = {
 
     var response = ""
-    for (i <- 0 to (list.length - 1)) {
-      if (list(i).user.toLowerCase() == inputUser.toLowerCase()) {
+    //for (i <- 0 to (list.length - 1)) {
+    for (item <- list) {
+
+      if (item.user.toLowerCase() == inputUser.toLowerCase()) {
 
 
-        if (list(i).pass.toLowerCase() == inputPass.toLowerCase()) {
+        if (item.pass.toLowerCase() == inputPass.toLowerCase()) {
 
-          response = "Account confirmed, Welcome " + list(i).user
-          currentWorker = new CurrentWorker(list(i).user, list(i).pass, list(i).acctype)
+          response = "Account confirmed, Welcome " + item.user
+          currentWorker = new CurrentWorker(item.user, item.pass, item.acctype)
           valid = true
           continue = true
         }
@@ -248,7 +252,7 @@ object main1 {
 
         }
 
-      } else if (list(i).user.toLowerCase() != inputUser.toLowerCase()) {
+      } else if (item.user.toLowerCase() != inputUser.toLowerCase()) {
         response = "Invalid entry, please check and try again"
       }
     }
@@ -259,7 +263,7 @@ object main1 {
 
   def printOrders(): Unit = {
 
-    OrderList1.printList()
+    OrderList1.printList(Stock)
   }
 
   def printInventory(): Unit = {
@@ -268,7 +272,7 @@ object main1 {
   }
 
   def accountTypeCheck(): String = {
-    val neededString = currentWorker.getCurrentWorker //gets String of current worker for processing later
+    val neededString = currentWorker.getCurrentWorker() //gets String of current worker for processing later
     val accountType = neededString(0)(2) //gets account type String to use later
 
 
@@ -280,7 +284,7 @@ object main1 {
   def decrementStock(itemID: Int): Unit = {
 
     OrderListOfficial = OrderList1.getOrderList
-    StockListOfficial = Stock.getInventoryList
+    StockListOfficial = Stock.getInventoryList()
 
     var deduction: Int = 0
 
@@ -289,13 +293,13 @@ object main1 {
     Stock.decrementStock(itemID, deduction) //at the moment your not confirming which stock to deduct needs a String check for each item
 
     OrderListOfficial = OrderList1.getOrderList
-    StockListOfficial = Stock.getInventoryList
+    StockListOfficial = Stock.getInventoryList()
   }
 
   //Travelling salesman attempt not finished
   def Travelling(): Unit = {
     var numberOfNodes = 0
-    var ints = Stack[Int]()
+    val ints = Stack[Int]()
     var dst = 0
     var adjacencyMatrix = ofDim[Int](100, 100)
 
@@ -304,7 +308,7 @@ object main1 {
     def tsp(adjacencyMatrix: Array[Array[Int]]): Unit = {
 
       numberOfNodes = adjacencyMatrix(1).length - 1
-      var visited = Array(numberOfNodes + 1)
+      val visited = Array(numberOfNodes + 1)
       visited(1) = 1;
       ints.push(1)
       var element: Int = 0
@@ -312,7 +316,7 @@ object main1 {
       var minFlag: Boolean = false
       print(1 + "\t")
 
-      while (ints.isEmpty == false) {
+      while (ints.nonEmpty) {
 
         element = ints.top
         var i: Int = 1

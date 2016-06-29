@@ -4,11 +4,10 @@
 /**
   * Created by MacZ on 17/06/2016.
   */
-class InventoryItem (ID : Int, Item : String,  Quantity : Int, Location : Double) {
+case class InventoryItem (id : Int, item : String,  var quantity : Int, location : Double) {
 
-  val id = ID
-  val item = Item
-  var quantity = Quantity
-
+  //  val id = ID
+  //  val item = Item
+  //  var quantity = Quantity
 }
 
