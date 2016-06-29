@@ -22,7 +22,7 @@ object Sessions extends JFXApp {
     val result = dialog.showAndWait()
 
     result match {
-      case Some("Check order list") => GUI.PrintOrderList
+      case Some("Check order list") => //GUI.PrintOrderList
       case None => println("No selection")
     }
   }

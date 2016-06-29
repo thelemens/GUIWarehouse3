@@ -27,7 +27,7 @@ object main1 {
 
   def main(args: Array[String]) {
 
-    GUI
+
 
     while (valid == false) {
       continue = false
